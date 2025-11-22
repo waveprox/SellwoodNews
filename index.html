@@ -8464,6 +8464,86 @@ function startMethod2Crasher() {
             updateCurrentTitleDisplay();
         }
 
+        function initializeMatrixRainBackground() {
+            // Create matrix rain container if it doesn't exist
+            let matrixRainContainer = document.getElementById('persistent-matrix-rain');
+            if (!matrixRainContainer) {
+                matrixRainContainer = document.createElement('div');
+                matrixRainContainer.id = 'persistent-matrix-rain';
+                matrixRainContainer.className = 'matrix-rain';
+                document.body.appendChild(matrixRainContainer);
+
+                // Start the matrix rain animation
+                startPersistentMatrixRain(matrixRainContainer);
+            }
+        }
+
+        function startPersistentMatrixRain(container) {
+            const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*!';
+
+            // Clear any existing streams
+            container.innerHTML = '';
+
+            // Create multiple columns of falling characters
+            const columns = Math.floor(window.innerWidth / 20); // One column every 20px
+
+            for (let col = 0; col < columns; col++) {
+                createMatrixStream(container, chars, col * 20);
+            }
+
+            // Continuously add new streams
+            setInterval(() => {
+                const randomCol = Math.floor(Math.random() * columns) * 20;
+                createMatrixStream(container, chars, randomCol);
+            }, 200);
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newColumns = Math.floor(window.innerWidth / 20);
+                if (newColumns !== columns) {
+                    // Could restart matrix rain here if needed
+                }
+            });
+        }
+
+        function createMatrixStream(container, chars, x) {
+            const stream = document.createElement('div');
+            stream.className = 'matrix-char';
+            stream.style.cssText = `
+                position: absolute;
+                color: var(--hacker-green);
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 14px;
+                font-weight: bold;
+                opacity: 0.8;
+                left: ${x}px;
+                top: -50px;
+                text-shadow: 0 0 8px var(--hacker-green);
+                transform: translateY(-100px);
+                animation: matrixFall 15s linear infinite;
+                user-select: none;
+                pointer-events: none;
+            `;
+
+            // Generate random characters for the stream
+            const streamLength = 20 + Math.floor(Math.random() * 30);
+            let streamText = '';
+            for (let i = 0; i < streamLength; i++) {
+                streamText += chars[Math.floor(Math.random() * chars.length)];
+                if (Math.random() < 0.3) streamText += '\n'; // Add line breaks for realism
+            }
+            stream.textContent = streamText;
+
+            container.appendChild(stream);
+
+            // Remove the stream after animation completes
+            setTimeout(() => {
+                if (stream.parentNode) {
+                    stream.remove();
+                }
+            }, 15000);
+        }
+
         function initializeBackgroundEffect() {
             // Set default Matrix rain effect if no saved preference
             const savedEffect = localStorage.getItem('backgroundEffect');
