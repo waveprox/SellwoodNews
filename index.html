@@ -6,9 +6,9 @@
     <title>[WAVE-X TERMINAL] :: ACCESS GRANTED</title>
     <style>
         :root {
-            /* Modern Gaming Theme */
-            --primary-bg: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
-            --secondary-bg: #0f3460;
+            /* Cyber Green Hacker Theme */
+            --terminal-black: #000000;
+            --terminal-green: #00ff00;
             --terminal-cyan: #00ffff;
             --terminal-orange: #ffa500;
             --terminal-yellow: #ffff00;
@@ -59,9 +59,18 @@
             width: 100%;
             height: 100vh;
             pointer-events: none;
-            z-index: 0;
+            z-index: 4;
             overflow: hidden;
-            opacity: 0.35;
+            opacity: 0.4;
+        }
+
+        /* Matrix rain shows through games page but game cards have solid backgrounds */
+        .games-page {
+            background: rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .games-page.show .matrix-rain {
+            z-index: 4;
         }
 
         .matrix-char {
@@ -727,10 +736,7 @@
         .search-container {
             display: flex;
             justify-content: center;
-            align-items: center;
             margin: 20px 0;
-            gap: 10px;
-            flex-wrap: wrap;
         }
 
         .search-input {
@@ -768,6 +774,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            margin-left: 10px;
         }
 
         .search-btn:hover {
@@ -775,44 +782,6 @@
             color: var(--hacker-black);
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-        }
-
-        .github-btn {
-            background: linear-gradient(135deg, #0d1117, #161b22);
-            border: 2px solid #58a6ff;
-            color: #f0f6fc;
-            padding: 12px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .github-btn:hover {
-            background: linear-gradient(135deg, #58a6ff, #0d1117);
-            color: #0d1117;
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
-            text-decoration: none;
-            border-color: #79c0ff;
-        }
-
-        .github-icon {
-            width: 16px;
-            height: 16px;
-            opacity: 0.8;
-        }
-
-        /* GitHub icon SVG */
-        .github-icon::before {
-            content: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='currentColor' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.14.82.65 1.1 1.7.8 2.12.61a3.01 3.01 0 01.88-1.19c-3.1-.36-6.37-1.57-6.37-6.98 0-1.54.55-2.8 1.45-3.78-.15-.36-.64-.92.13-.92.83 0 1.33.61 1.42 1.21 1.31-.39 2.69-.39 4.0 0 .09-.6.58-1.21 1.41-1.21.78 0 .28.56.14.92C10.45 5.22 11 6.48 11 8c0 .41-.04.81-.11 1.19.87.63 1.87.92 2.82 1.03-.2.16-.39.38-.58.59a2.99 2.99 0 01-1.42 2.33c-.28.05-.42.26-.5.5-.08.24-.23.42-.44.56-.2.13-.6.02-.86-.12-.26-.14-.5-.48-.62-.8-.24-.66-.39-1.38-.49-2.1C12.71 10.58 15 7.54 15 4 15 3.58 11.42 0 8 0z'/%3E%3C/svg%3E");
         }
 
         .games-btn {
@@ -1283,6 +1252,168 @@
 
         .launch-proxy-btn:active {
             transform: scale(0.95);
+        }
+
+        /* WAVE-X Proxy Loading Animation Overlay */
+        .proxy-loading-overlay {
+            position: fixed;
+            top: 80px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid var(--hacker-green);
+            border-radius: 10px;
+            z-index: 4500;
+            display: none;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .proxy-loading-overlay.show {
+            display: block;
+        }
+
+        .proxy-loading-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--hacker-green);
+            font-family: monospace;
+            text-shadow: 0 0 20px var(--hacker-green);
+        }
+
+        .proxy-loading-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .proxy-loading-status {
+            font-size: 24px;
+            margin-bottom: 40px;
+            text-align: center;
+            min-height: 60px;
+        }
+
+        .proxy-loading-progress {
+            width: 400px;
+            height: 4px;
+            background: rgba(0, 255, 0, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .proxy-loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--hacker-green), var(--hacker-cyan));
+            width: 0%;
+            border-radius: 2px;
+            animation: proxyProgress 3s ease-out forwards;
+            box-shadow: 0 0 10px var(--hacker-green);
+        }
+
+        .proxy-loading-matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.3;
+        }
+
+        .proxy-matrix-stream {
+            position: absolute;
+            color: var(--hacker-green);
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            opacity: 0.6;
+            animation: proxyMatrixFall 3s linear infinite;
+            text-shadow: 0 0 8px var(--hacker-green);
+        }
+
+        .proxy-loading-terminal {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--hacker-cyan);
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+            font-size: 14px;
+            overflow: hidden;
+        }
+
+        .proxy-terminal-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .proxy-terminal-line {
+            display: flex;
+            align-items: flex-start;
+            opacity: 0;
+            animation: fadeInLine 0.5s ease-out forwards;
+        }
+
+        .proxy-terminal-line:nth-child(n+2) {
+            animation-delay: 0.8s;
+        }
+
+        .proxy-terminal-line:nth-child(n+3) {
+            animation-delay: 1.6s;
+        }
+
+        .proxy-terminal-line:nth-child(n+4) {
+            animation-delay: 2.4s;
+        }
+
+        .proxy-terminal-prompt {
+            color: var(--hacker-cyan);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .proxy-terminal-output {
+            color: var(--hacker-green);
+            flex: 1;
+        }
+
+        .proxy-terminal-cursor {
+            animation: terminalCursor 1.2s infinite;
+            display: inline;
+        }
+
+        /* Animation keyframes for proxy loading */
+        @keyframes proxyProgress {
+            0% { width: 0%; }
+            50% { width: 85%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes proxyMatrixFall {
+            0% { transform: translateY(-100px); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+
+        @keyframes fadeInLine {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
         }
 
         .proxy-overlay-text {
@@ -1919,7 +2050,7 @@
     <!-- Modern Background Particles -->
     <div class="background-particles" id="backgroundParticles"></div>
 
-    <!-- Game Iframe Overlay -->
+    <!-- Matrix Rain Background Container -->
     <div class="game-iframe-overlay" id="gameIframeOverlay">
         <div class="game-iframe-container" id="gameIframeContainer">
             <div class="game-iframe-header" id="gameIframeHeader">
@@ -1938,7 +2069,7 @@
 
     <!-- Tips Bar -->
     <div class="tips-bar" id="tipsBar">
-        <div class="tips-text" id="tipsText">"maddy is a 6'7 leprechaun" • "HAHAHAHHA Monty is reading this and checking if its still there"</div>
+        <div class="tips-text" id="tipsText">"maddy is a 6'7 leprechaun" • "evie and liesl are boyfriends"</div>
     </div>
 
     <!-- Games Page -->
@@ -1975,10 +2106,30 @@
         <div class="tab-content" id="proxy-tab">
             <div class="proxy-interface">
                 <h1>🌐 WAVE-X PROXY NETWORK</h1>
-                <div class="proxy-launch-section">
-                    <button class="launch-proxy-btn" id="launchProxyBtn">🚀 LAUNCH PROXY</button>
-                    <div class="proxy-overlay-text" id="proxyOverlayText"></div>
+
+                <!-- URL Switch Buttons -->
+                <div class="proxy-controls">
+                    <h2 style="color: var(--hacker-cyan); font-size: 1.2rem; margin-bottom: 15px;">Select Proxy Server:</h2>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                        <button class="games-btn" onclick="setProxyUrl(0)">
+                            <div class="btn-indicator" id="btnIndicator0">●</div>
+                            <span>Server A</span>
+                        </button>
+                        <button class="games-btn" onclick="setProxyUrl(1)">
+                            <div class="btn-indicator" id="btnIndicator1">●</div>
+                            <span>Server B</span>
+                        </button>
+                        <button class="games-btn" onclick="setProxyUrl(2)">
+                            <div class="btn-indicator" id="btnIndicator2">●</div>
+                            <span>Server C</span>
+                        </button>
+                    </div>
                 </div>
+
+                    <div class="proxy-launch-section">
+                        <button class="launch-proxy-btn" id="launchProxyBtn">🚀 LAUNCH PROXY</button>
+                        <div class="proxy-overlay-text" id="proxyOverlayText"></div>
+                    </div>
             </div>
         </div>
 
@@ -2228,8 +2379,112 @@
         </div>
     </div>
 
-    <script src="security-utils.js"></script>
     <script>
+        // Global Matrix Rain Background System
+        class MatrixBackground {
+            constructor() {
+                this.matrixRain = document.getElementById('matrixRain');
+                this.isActive = false;
+                this.matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*!(){}[]|\\:;"\'<>,.?/~`';
+                this.streams = [];
+                this.maxStreams = 25; // Increased for better coverage
+                this.init();
+            }
+
+            init() {
+                this.createFullMatrixRain();
+                this.isActive = true;
+            }
+
+            createFullMatrixRain() {
+                // Clear any existing streams
+                this.matrixRain.innerHTML = '';
+
+                // Create continuous columns of falling characters
+                for (let col = 0; col < this.maxStreams; col++) {
+                    this.createMatrixStream(col);
+                }
+            }
+
+            createMatrixStream(columnIndex) {
+                const stream = document.createElement('div');
+                const xPos = (columnIndex / this.maxStreams) * 100; // Even distribution across width
+
+                stream.className = `matrix-char matrix-char-custom ${this.getRandomColorClass()}`;
+                stream.style.left = xPos + '%';
+                stream.style.fontSize = '14px';
+                stream.style.opacity = '0.8';
+                stream.style.userSelect = 'none';
+
+                const charLength = Math.floor(Math.random() * 20) + 10; // Random length per stream
+                let chars = '';
+                for (let i = 0; i < charLength; i++) {
+                    chars += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
+                }
+                stream.textContent = chars;
+
+                this.matrixRain.appendChild(stream);
+                this.streams.push(stream);
+
+                // Animate the stream
+                this.animateMatrixStream(stream);
+            }
+
+            getRandomColorClass() {
+                const colors = ['green', 'cyan', 'red', 'yellow', 'purple'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            animateMatrixStream(stream) {
+                const fallSpeed = Math.random() * 2 + 1.5; // Slight speed variation
+                let y = -stream.offsetHeight;
+
+                const animate = () => {
+                    y += fallSpeed;
+                    stream.style.top = y + 'px';
+
+                    if (y > window.innerHeight) {
+                        // Reset to top with slight delay
+                        y = -stream.offsetHeight;
+                        // Occasionally change characters
+                        if (Math.random() < 0.1) {
+                            let chars = '';
+                            const charLength = Math.floor(Math.random() * 20) + 10;
+                            for (let i = 0; i < charLength; i++) {
+                                chars += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
+                            }
+                            stream.textContent = chars;
+                        }
+                    }
+
+                    if (this.isActive) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+
+                animate();
+
+                // Respawn stream occasionally
+                setTimeout(() => {
+                    if (this.isActive) {
+                        stream.remove();
+                        const newStream = this.streams.splice(this.streams.indexOf(stream), 1);
+                        setTimeout(() => this.createMatrixStream(Math.floor(Math.random() * this.maxStreams)), Math.random() * 5000);
+                    }
+                }, Math.random() * 10000 + 5000); // 5-15 second respawn
+            }
+
+            stop() {
+                this.isActive = false;
+                this.matrixRain.innerHTML = '';
+            }
+
+            restart() {
+                this.stop();
+                setTimeout(() => this.init(), 100);
+            }
+        }
+
         class HackerTerminal {
             constructor() {
                 this.textElement = document.getElementById('typedText');
@@ -2548,6 +2803,9 @@
             initializeGamesPage();
             initializeTabs();
 
+            // Start matrix rain background immediately
+            const matrixBackground = new MatrixBackground();
+
             // Start tips cycler
             new TipsCycler();
 
@@ -2585,13 +2843,6 @@
 
         const gamesData = [
             // NEW GAMES ADDED
-            { url: 'https://scratch.mit.edu/projects/1231016758/embed', title: 'Wheelie Life', image: 'https://i.ytimg.com/vi/2P1xYwxsYv4/hqdefault.jpg' },
-            { url: 'https://storage.classroomsarecool.mex.com/urban-sniper/index.html', title: 'Urban Sniper', image: 'https://storage.classroomsarecool.mex.com/images/urbansniper.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/UZG/index.html', title: 'UZG', image: 'https://storage.classroomsarecool.mex.com/images/UZG.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/heistio/index.html', title: 'Heist IO', image: 'https://storage.classroomsarecool.mex.com/images/heistio.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/maskedforces/index.html', title: 'Masked Forces', image: 'https://storage.classroomsarecool.mex.com/images/maskedforces.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/hackertyper/index.html', title: 'Hacker Typer', image: 'https://storage.classroomsarecool.mex.com/images/hackertyper.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/doodle-jump/index.html', title: 'Doodle Jump', image: 'https://storage.classroomsarecool.mex.com/images/doodlejump.png' },
             { url: 'https://storage.classroomsarecool.mex.com/snowball-io/index.html', title: 'Snowball.io', image: 'https://storage.classroomsarecool.mex.com/images/snowballio.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bottle-flip-3d/index.html', title: 'Bottle Flip 3D', image: 'https://storage.classroomsarecool.mex.com/images/bottleflip.png' },
             { url: 'https://storage.classroomsarecool.mex.com/aquaparkcars.html', title: 'Aqua Park.io', image: 'https://storage.classroomsarecool.mex.com/images/aquaparkcars.png' },
@@ -2614,104 +2865,107 @@
             { url: 'https://storage.classroomsarecool.mex.com/a/index.html', title: 'Only Up', image: 'https://storage.classroomsarecool.mex.com/images/onlyupball.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bank/index.html', title: 'Bank Robbery 1', image: 'https://storage.classroomsarecool.mex.com/images/bankrobbery.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bank-robbery-2/index.html', title: 'Bank Robbery 2', image: 'https://storage.classroomsarecool.mex.com/images/bankrobbery2.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/ks2teams/index.html', title: 'KS2 Teams', image: 'https://storage.classroomsarecool.mex.com/images/ks2teams.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/ks2teams/index.html', title: 'KS2 Teams', image: '' },
             { url: 'https://storage.classroomsarecool.mex.com/motox3m2/index.html', title: 'Moto X3M 2', image: 'https://storage.classroomsarecool.mex.com/images/motox3m2.png' },
             { url: 'https://storage.classroomsarecool.mex.com/flappybasketball/index.html', title: 'Flappy Basketball', image: 'https://storage.classroomsarecool.mex.com/images/flappybasketball.png' },
             { url: 'https://storage.classroomsarecool.mex.com/ultimatecardriving/index.html', title: 'Ultimate Car Driving', image: 'https://storage.classroomsarecool.mex.com/images/ultimatecardriving.png' },
             { url: 'https://storage.classroomsarecool.mex.com/carparkingmaster/index.html', title: 'Car Parking Master', image: 'https://storage.classroomsarecool.mex.com/images/carparkingmaster.png' },
             { url: 'https://storage.classroomsarecool.mex.com/gunfest/index.html', title: 'Gun Fest', image: 'https://storage.classroomsarecool.mex.com/images/gunfest.png' },
             { url: 'https://storage.classroomsarecool.mex.com/spacewaves/index.html', title: 'Space Waves', image: 'https://storage.classroomsarecool.mex.com/images/spacewaves.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/stacksurfer/index.html', title: 'Stack Surfer', image: 'https://storage.classroomsarecool.mex.com/images/stacksurfer.png' },
             { url: 'https://storage.classroomsarecool.mex.com/realflightsimulator/index.html', title: 'Real Flight Simulator', image: 'https://storage.classroomsarecool.mex.com/images/realflightsimulator.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/bicycleridersimulator/index.html', title: 'Bicycle Riders Simulator', image: 'https://storage.classroomsarecool.mex.com/images/bicycleridersimulator.png' },
             { url: 'https://storage.classroomsarecool.mex.com/granny/index.html', title: 'Granny', image: 'https://storage.classroomsarecool.mex.com/images/granny.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/gdunity/index.html', title: 'Geometry Dash', image: 'https://storage.classroomsarecool.mex.com/images/gdunity.png' },
             { url: 'https://storage.classroomsarecool.mex.com/moneyrush/index.html', title: 'Money Rush', image: 'https://storage.classroomsarecool.mex.com/images/moneyrush.png' },
 
             // CLASSIC CLICKER GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/cookieclicker.html', title: 'Cookie Clicker', image: 'https://mypps.classlink.courter.com/images/games/cookieclicker-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/adventurecapitalist.html', title: 'Adventure Capitalist', image: 'https://mypps.classlink.courter.com/images/games/adventurecapitalist-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/capybaraclicker.html', title: 'Capybara Clicker', image: 'https://mypps.classlink.courter.com/images/games/capybaraclicker-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/spacebarclicker.html', title: 'Spacebar Clicker', image: 'https://mypps.classlink.courter.com/images/games/spacebarclicker-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/cookieclicker.html', title: 'Cookie Clicker', image: 'https://myapps.classlink.fiddlefish.net/images/games/cookieclicker-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/adventurecapitalist.html', title: 'Adventure Capitalist', image: 'https://myapps.classlink.fiddlefish.net/images/games/adventurecapitalist-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/capybaraclicker.html', title: 'Capybara Clicker', image: 'https://myapps.classlink.fiddlefish.net/images/games/capybaraclicker-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/spacebarclicker.html', title: 'Spacebar Clicker', image: 'https://myapps.classlink.fiddlefish.net/images/games/spacebarclicker-min.png' },
 
             // ACTION & MOTORBIKE GAMES
             { url: 'https://storage.classroomsarecool.mex.com/Moto-X3M/index.html', title: 'Moto X3M', image: 'https://storage.classroomsarecool.mex.com/images/motox3m.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/motox3m3', title: 'Moto X3M 3', image: 'https://mypps.classlink.courter.com/images/games/motox3m-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/motox3mspooky.html', title: 'Moto X3M Spooky', image: 'https://mypps.classlink.courter.com/images/games/motox3mspooky.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/motox3mwinter.html', title: 'Moto X3M Winter', image: 'https://mypps.classlink.courter.com/images/games/motox3mwinter.jpeg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/motox3mpool.html', title: 'Moto X3M Pool Party', image: 'https://mypps.classlink.courter.com/images/games/motox3mpoolparty.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/turbomotoracer.html', title: 'Turbo Moto Racer', image: 'https://mypps.classlink.courter.com/images/games/turbomotoracer-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/motox3m3', title: 'Moto X3M 3', image: 'https://myapps.classlink.fiddlefish.net/images/games/motox3m-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/motox3mspooky.html', title: 'Moto X3M Spooky', image: 'https://myapps.classlink.fiddlefish.net/images/games/motox3mspooky.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/motox3mwinter.html', title: 'Moto X3M Winter', image: 'https://myapps.classlink.fiddlefish.net/images/games/motox3mwinter.jpeg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/motox3mpool.html', title: 'Moto X3M Pool Party', image: 'https://myapps.classlink.fiddlefish.net/images/games/motox3mpoolparty.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/turbomotoracer.html', title: 'Turbo Moto Racer', image: 'https://myapps.classlink.fiddlefish.net/images/games/turbomotoracer-min.jpg' },
 
             // RACING & DRIVING GAMES
             { url: 'https://storage.classroomsarecool.mex.com/snowrider3d/index.html', title: 'Snow Rider 3D', image: 'https://storage.classroomsarecool.mex.com/images/snowrider3d.png' },
             { url: 'https://storage.classroomsarecool.mex.com/highwayriderextreme.html', title: 'Highway Rider Extreme', image: 'https://storage.classroomsarecool.mex.com/images/highwayriderextreme.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/drifthunters.html', title: 'Drift Hunters', image: 'https://mypps.classlink.courter.com/images/games/drifhunters-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/drifthunters.html', title: 'Drift Hunters', image: 'https://myapps.classlink.fiddlefish.net/images/games/drifhunters-min.jpg' },
             { url: 'https://storage.classroomsarecool.mex.com/crazy-cars/index.html', title: 'Crazy Cars', image: 'https://storage.classroomsarecool.mex.com/images/crazycars.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/mrracer.html', title: 'Mr Racer', image: 'https://mypps.classlink.courter.com/images/games/mrracer.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/arcadecardrift.html', title: 'Arcade Car Drift', image: 'https://mypps.classlink.courter.com/images/games/arcadecardrift-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/racesurvival.html', title: 'Race Survival', image: 'https://mypps.classlink.courter.com/images/games/racesurvival.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/mrracer.html', title: 'Mr Racer', image: 'https://myapps.classlink.fiddlefish.net/images/games/mrracer.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/arcadecardrift.html', title: 'Arcade Car Drift', image: 'https://myapps.classlink.fiddlefish.net/images/games/arcadecardrift-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/racesurvival.html', title: 'Race Survival', image: 'https://myapps.classlink.fiddlefish.net/images/games/racesurvival.jpg' },
 
             // MULTIPLAYER & PARTY GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/1v1lol.html', title: '1v1.lol', image: 'https://mypps.classlink.courter.com/images/games/1v1lol-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/2drocketleague.html', title: '2D Rocket League', image: 'https://mypps.classlink.courter.com/images/games/2drocketleague-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/rocketsoccerderby.html', title: 'Rocket Soccer Derby', image: 'https://mypps.classlink.courter.com/images/games/rocketsocderby-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/1v1lol.html', title: '1v1.lol', image: 'https://myapps.classlink.fiddlefish.net/images/games/1v1lol-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/2drocketleague.html', title: '2D Rocket League', image: 'https://myapps.classlink.fiddlefish.net/images/games/2drocketleague-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/rocketsoccerderby.html', title: 'Rocket Soccer Derby', image: 'https://myapps.classlink.fiddlefish.net/images/games/rocketsocderby-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/paperio2/index.html', title: 'Paper.io 2', image: 'https://storage.classroomsarecool.mex.com/images/paperio2.png' },
             { url: 'https://storage.classroomsarecool.mex.com/holeio.html', title: 'Hole.io', image: 'https://storage.classroomsarecool.mex.com/images/holeio.png' },
             { url: 'https://storage.classroomsarecool.mex.com/slope/index.html', title: 'Slope.io', image: 'https://storage.classroomsarecool.mex.com/images/slope.png' },
 
             // PHYSICS & RAGDOLL GAMES
-            { url: 'ragdoll-hit.html', title: 'Ragdoll Hit', image: 'https://mypps.classlink.courter.com/images/games/ragdollarchers-min.png' },
-             { url: 'satisfying-click.html', title: 'Ragdoll Hit', image: 'https://mypps.classlink.courter.com/images/games/ragdollarchers-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/ragdollarchers.html', title: 'Ragdoll Archers', image: 'https://mypps.classlink.courter.com/images/games/ragdollarchers-min.png' },
+            { url: 'ragdoll-hit.html', title: 'Ragdoll Hit', image: 'https://myapps.classlink.fiddlefish.net/images/games/ragdollarchers-min.png' },
+             { url: 'satisfying-click.html', title: 'Ragdoll Hit', image: 'https://myapps.classlink.fiddlefish.net/images/games/ragdollarchers-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/ragdollarchers.html', title: 'Ragdoll Archers', image: 'https://myapps.classlink.fiddlefish.net/images/games/ragdollarchers-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/eggy-car/index.html', title: 'Eggy Car', image: 'https://storage.classroomsarecool.mex.com/images/eggycar.png' },
             { url: 'https://storage.classroomsarecool.mex.com/death-run-3d/index.html', title: 'Death Run 3D', image: 'https://storage.classroomsarecool.mex.com/images/deathrun3d.png' },
             { url: 'https://storage.classroomsarecool.mex.com/tombofthemask.html', title: 'Tomb of the Mask', image: 'https://storage.classroomsarecool.mex.com/images/tombofthemask.png' },
 
             // PROBLEM SOLVING PUZZLES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/blockblast.html', title: 'Block Blast', image: 'https://mypps.classlink.courter.com/images/games/blockblast-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/blockblast.html', title: 'Block Blast', image: 'https://myapps.classlink.fiddlefish.net/images/games/blockblast-min.jpg' },
             { url: 'https://storage.classroomsarecool.mex.com/skibidi-strike/index.html', title: 'Skibidi Strike', image: 'https://storage.classroomsarecool.mex.com/images/skibidistrike.png' },
             { url: 'https://storage.classroomsarecool.mex.com/pixelshooter/index.html', title: 'Pixel Shooter', image: 'https://storage.classroomsarecool.mex.com/images/pixelshooter.png' },
             { url: 'https://storage.classroomsarecool.mex.com/fruitninja/index.html', title: 'Fruit Ninja', image: 'https://storage.classroomsarecool.mex.com/images/fruitninja.png' },
 
             // PLATFORMER GAMES
             { url: 'https://storage.classroomsarecool.mex.com/gswitch-3/index.html', title: 'G-Switch 3', image: 'https://storage.classroomsarecool.mex.com/images/gswitch3.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/vex3m.html', title: 'Vex 3', image: 'https://mypps.classlink.courter.com/images/games/vex3m.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/doodlejump.html', title: 'Doodle Jump', image: 'https://mypps.classlink.courter.com/images/games/doodlejump-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/vex3m.html', title: 'Vex 3', image: 'https://myapps.classlink.fiddlefish.net/images/games/vex3m.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/doodlejump.html', title: 'Doodle Jump', image: 'https://myapps.classlink.fiddlefish.net/images/games/doodlejump-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/geometrydash/index.html', title: 'Geometry Dash Lite', image: 'https://storage.classroomsarecool.mex.com/images/geometrydashlite.png' },
 
             // RETRO & CLASSIC GAMES
             { url: 'https://storage.classroomsarecool.mex.com/pacman/index.html', title: 'Pac-Man', image: 'https://storage.classroomsarecool.mex.com/images/pacman.png' },
             { url: 'https://storage.classroomsarecool.mex.com/sm64/index.html', title: 'Super Mario 64', image: 'https://storage.classroomsarecool.mex.com/images/supermario64.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/superhot.html', title: 'Super Hot', image: 'https://mypps.classlink.courter.com/images/games/superhot.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/superhot.html', title: 'Super Hot', image: 'https://myapps.classlink.fiddlefish.net/images/games/superhot.png' },
             { url: 'https://storage.classroomsarecool.mex.com/googlesnake.html', title: 'Google Snake', image: 'https://storage.classroomsarecool.mex.com/images/googlesnake.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/chess.html', title: 'Chess', image: 'https://mypps.classlink.courter.com/images/games/chess-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/chess.html', title: 'Chess', image: 'https://myapps.classlink.fiddlefish.net/images/games/chess-min.png' },
 
             // SIMULATION GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/bitlife.html', title: 'BitLife', image: 'https://mypps.classlink.courter.com/images/games/bitlife-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/bitlife.html', title: 'BitLife', image: 'https://myapps.classlink.fiddlefish.net/images/games/bitlife-min.jpg' },
             { url: 'https://storage.classroomsarecool.mex.com/retro-bowl/index.html', title: 'Retro Bowl', image: 'https://storage.classroomsarecool.mex.com/images/retrobowl.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/cellmachine.html', title: 'Cell Machine', image: 'https://mypps.classlink.courter.com/images/games/cell-machine-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/badtimesimulator.html', title: 'Bad Time Simulator', image: 'https://mypps.classlink.courter.com/images/games/badtimesimulator-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/tanukisunset.html', title: 'Tanuki Sunset', image: 'https://mypps.classlink.courter.com/images/games/tanukisunset-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/cellmachine.html', title: 'Cell Machine', image: 'https://myapps.classlink.fiddlefish.net/images/games/cell-machine-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/badtimesimulator.html', title: 'Bad Time Simulator', image: 'https://myapps.classlink.fiddlefish.net/images/games/badtimesimulator-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/tanukisunset.html', title: 'Tanuki Sunset', image: 'https://myapps.classlink.fiddlefish.net/images/games/tanukisunset-min.png' },
 
             // HORROR & SCARY GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/backrooms.html', title: 'Backrooms', image: 'https://mypps.classlink.courter.com/images/games/backrooms-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/baldis.html', title: 'Baldi\'s Basics', image: 'https://mypps.classlink.courter.com/images/games/baldisbasics-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/deadlydecent.html', title: 'Deadly Decent', image: 'https://mypps.classlink.courter.com/images/games/deadlydecent-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/backrooms.html', title: 'Backrooms', image: 'https://myapps.classlink.fiddlefish.net/images/games/backrooms-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/baldis.html', title: 'Baldi\'s Basics', image: 'https://myapps.classlink.fiddlefish.net/images/games/baldisbasics-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/deadlydecent.html', title: 'Deadly Decent', image: 'https://myapps.classlink.fiddlefish.net/images/games/deadlydecent-min.png' },
 
             // MUSIC & RHYTHM GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/adanceoffireandice.html', title: 'A Dance of Fire and Ice', image: 'https://mypps.classlink.courter.com/images/games/a-dance-of-fire-and-ice-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/adanceoffireandice.html', title: 'A Dance of Fire and Ice', image: 'https://myapps.classlink.fiddlefish.net/images/games/a-dance-of-fire-and-ice-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/jetpack-joyride/index.html', title: 'Jetpack Joyride', image: 'https://storage.classroomsarecool.mex.com/images/jetpackjoyride.png' },
 
             // ONLINE MULTIPLAYER GAMES
             { url: 'https://storage.classroomsarecool.mex.com/subwaysurfers-sf/index.html', title: 'Subway Surfers', image: 'https://storage.classroomsarecool.mex.com/images/subwaysurfers.png' },
             { url: 'https://storage.classroomsarecool.mex.com/basketball-stars/index.html', title: 'Basketball Stars', image: 'https://storage.classroomsarecool.mex.com/images/basketballstars.png' },
             { url: 'https://storage.classroomsarecool.mex.com/rooftop-snipers/index.html', title: 'Rooftop Snipers', image: 'https://storage.classroomsarecool.mex.com/images/rooftopsnipers.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/policechase.html', title: 'Police Chase', image: 'https://mypps.classlink.courter.com/images/games/policechase-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/policechase.html', title: 'Police Chase', image: 'https://myapps.classlink.fiddlefish.net/images/games/policechase-min.png' },
 
             // RUNNING & PARKOUR GAMES
             { url: 'https://storage.classroomsarecool.mex.com/minecraftparkour/index.html', title: 'Minecraft Parkour', image: 'https://storage.classroomsarecool.mex.com/images/minecraftparkour.png' },
             { url: 'https://storage.classroomsarecool.mex.com/crossyroad/index.html', title: 'Crossy Road', image: 'https://storage.classroomsarecool.mex.com/images/crossyroad.png' },
 
             // RANDOM & PARTY GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/basketrandom.html', title: 'Basket Random', image: 'https://mypps.classlink.courter.com/images/games/basketrandom-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/boxingrandom.html', title: 'Boxing Random', image: 'https://mypps.classlink.courter.com/images/games/boxingrandom-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/basketrandom.html', title: 'Basket Random', image: 'https://myapps.classlink.fiddlefish.net/images/games/basketrandom-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/boxingrandom.html', title: 'Boxing Random', image: 'https://myapps.classlink.fiddlefish.net/images/games/boxingrandom-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/terraria.html', title: 'terraria', image: 'https://storage.classroomsarecool.mex.com/images/terraria.png' },
             { url: 'https://storage.classroomsarecool.mex.com/sandboxels/index.html', title: 'sand boxels', image: 'https://storage.classroomsarecool.mex.com/images/sandboxels.png' },
             { url: 'https://storage.classroomsarecool.mex.com/smash-it/index.html', title: 'smash it', image: 'https://storage.classroomsarecool.mex.com/images/smashit.png' },
@@ -2729,85 +2983,60 @@
             { url: 'https://storage.classroomsarecool.mex.com/crazymotorcycle/index.html', title: 'crazy motorcycle', image: 'https://storage.classroomsarecool.mex.com/images/crazymotorcycle.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bikeofhellspeedobby/index.html', title: 'bike of hell', image: 'https://storage.classroomsarecool.mex.com/images/bikeofhellspeedobby.png' },
             { url: 'https://storage.classroomsarecool.mex.com/deadrails/index.html', title: 'dead rails', image: 'https://storage.classroomsarecool.mex.com/images/deadrails.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/ducklingsio.html', title: 'ducklings.io', image: 'https://mypps.classlink.courter.com/images/games/ducklingsio-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/webglfluid.html', title: 'webgl fluid', image: 'https://mypps.classlink.courter.com/images/games/webglfluid.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/gladihoppers.html', title: 'gladihoppers', image: 'https://mypps.classlink.courter.com/images/games/gladihoppers-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/soccerrandom.html', title: 'Soccer Random', image: 'https://mypps.classlink.courter.com/images/games/soccerrandom.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/volleyrandom.html', title: 'Volley Random', image: 'https://mypps.classlink.courter.com/images/games/volleyrandom-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/ducklingsio.html', title: 'ducklings.io', image: 'https://myapps.classlink.fiddlefish.net/images/games/ducklingsio-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/webglfluid.html', title: 'webgl fluid', image: 'https://myapps.classlink.fiddlefish.net/images/games/webglfluid.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/gladihoppers.html', title: 'gladihoppers', image: 'https://myapps.classlink.fiddlefish.net/images/games/gladihoppers-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/soccerrandom.html', title: 'Soccer Random', image: 'https://myapps.classlink.fiddlefish.net/images/games/soccerrandom.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/volleyrandom.html', title: 'Volley Random', image: 'https://myapps.classlink.fiddlefish.net/images/games/volleyrandom-min.png' },
 
             // DIRTY & FUNNY GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/justfalllol.html', title: 'Just Fall LOL', image: 'https://mypps.classlink.courter.com/images/games/justfalllol.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/justfalllol.html', title: 'Just Fall LOL', image: 'https://myapps.classlink.fiddlefish.net/images/games/justfalllol.png' },
             { url: 'https://storage.classroomsarecool.mex.com/elasticface/index.html', title: 'Elastic Face', image: 'https://storage.classroomsarecool.mex.com/images/elasticface.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/skyriders.html', title: 'Sky Riders', image: 'https://mypps.classlink.courter.com/images/games/skyriders-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/redvsbluez.html', title: 'Red VS Bluez', image: 'https://mypps.classlink.courter.com/images/games/redvsblue-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/skyriders.html', title: 'Sky Riders', image: 'https://myapps.classlink.fiddlefish.net/images/games/skyriders-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/redvsbluez.html', title: 'Red VS Bluez', image: 'https://myapps.classlink.fiddlefish.net/images/games/redvsblue-min.png' },
 
             // STICKMAN GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/stickmanhook.html', title: 'Stickman Hook', image: 'https://mypps.classlink.courter.com/images/games/stickmanhook.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/stickmanbike.html', title: 'Stickman Bike', image: 'https://mypps.classlink.courter.com/images/games/stickmanbike-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/crazybikes.html', title: 'Crazy Bikes', image: 'https://mypps.classlink.courter.com/images/games/crazybikes-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/stickmanhook.html', title: 'Stickman Hook', image: 'https://myapps.classlink.fiddlefish.net/images/games/stickmanhook.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/stickmanbike.html', title: 'Stickman Bike', image: 'https://myapps.classlink.fiddlefish.net/images/games/stickmanbike-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/crazybikes.html', title: 'Crazy Bikes', image: 'https://myapps.classlink.fiddlefish.net/images/games/crazybikes-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/gunspin/index.html', title: 'Gunspin', image: 'https://storage.classroomsarecool.mex.com/images/gunspin.png' },
 
             // BIKES & OBSTACLE GAMES
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/bikeobby.html', title: 'Bike Obby', image: 'https://tr.rbxcdn.com/180DAY-0aee4808db5c1ebae4fa0c0edae0d78c/768/432/Image/Webp/noFilter' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/escaperoad.html', title: 'Escape Road', image: 'https://mypps.classlink.courter.com/images/games/escaperoad-min.png' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/bikeobby.html', title: 'Bike Obby', image: 'https://tr.rbxcdn.com/180DAY-0aee4808db5c1ebae4fa0c0edae0d78c/768/432/Image/Webp/noFilter' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/escaperoad.html', title: 'Escape Road', image: 'https://myapps.classlink.fiddlefish.net/images/games/escaperoad-min.png' },
             { url: 'https://storage.classroomsarecool.mex.com/slow-roads/index.html', title: 'Slow Roads', image: 'https://storage.classroomsarecool.mex.com/images/slowroads.png' },
 
             // MISC GAMES
             { url: 'https://storage.classroomsarecool.mex.com/scrapmetal/index.html', title: 'Scrap Metal 3', image: '' },
+            { url: 'https://scratch.mit.edu/projects/1032847723/', title: 'Cut the Rope: Time Travel', image: 'data:image/jpeg;base64,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' },
             { url: 'https://storage.classroomsarecool.mex.com/cuttherope-Timetravel/index.html', title: 'Cut the Rope: Time Travel', image: 'https://storage.classroomsarecool.mex.com/images/cuttherope.png' },
             { url: 'https://storage.classroomsarecool.mex.com/clusterrush/index.html', title: 'Cluster Rush', image: 'https://storage.classroomsarecool.mex.com/images/clusterrush.png' },
             { url: 'https://storage.classroomsarecool.mex.com/timeshooter3.html', title: 'Time Shooter 3', image: 'https://storage.classroomsarecool.mex.com/images/timeshooter3.png' },
             { url: 'https://storage.classroomsarecool.mex.com/stackball/index.html', title: 'Stackball', image: 'https://storage.classroomsarecool.mex.com/images/stackball.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/spiralroll.html', title: 'Spiral Roll', image: 'https://mypps.classlink.courter.com/images/games/spiralroll-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/dune.html', title: 'Dune', image: 'https://mypps.classlink.courter.com/images/games/dune-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/dayofmeatradiation.html', title: 'Day of Meat: Radiation', image: 'https://mypps.classlink.courter.com/images/games/dayofmeatradiation-min.jpg' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/1on1soccer.html', title: '1on1 Soccer', image: 'https://mypps.classlink.courter.com/images/games/1on1soccer-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/spiralroll.html', title: 'Spiral Roll', image: 'https://myapps.classlink.fiddlefish.net/images/games/spiralroll-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/dune.html', title: 'Dune', image: 'https://myapps.classlink.fiddlefish.net/images/games/dune-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/dayofmeatradiation.html', title: 'Day of Meat: Radiation', image: 'https://myapps.classlink.fiddlefish.net/images/games/dayofmeatradiation-min.jpg' },
+            { url: 'https://myapps.classlink.fiddlefish.net/assets/mainstorage/1on1soccer.html', title: '1on1 Soccer', image: 'https://myapps.classlink.fiddlefish.net/images/games/1on1soccer-min.jpg' },
             { url: 'https://storage.classroomsarecool.mex.com/bank/index.html', title: 'Bank Robbery 1', image: 'https://storage.classroomsarecool.mex.com/images/bankrobbery.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bank-robbery-2/index.html', title: 'Bank Robbery 2', image: 'https://storage.classroomsarecool.mex.com/images/bankrobbery2.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/ks2teams/index.html', title: 'KS2 Teams', image: '' },
             { url: 'https://storage.classroomsarecool.mex.com/motox3m2/index.html', title: 'Moto X3M 2', image: 'https://storage.classroomsarecool.mex.com/images/motox3m2.png' },
             { url: 'https://storage.classroomsarecool.mex.com/flappybasketball/index.html', title: 'Flappy Basketball', image: 'https://storage.classroomsarecool.mex.com/images/flappybasketball.png' },
             { url: 'https://storage.classroomsarecool.mex.com/ultimatecardriving/index.html', title: 'Ultimate Car Driving', image: 'https://storage.classroomsarecool.mex.com/images/ultimatecardriving.png' },
             { url: 'https://storage.classroomsarecool.mex.com/carparkingmaster/index.html', title: 'Car Parking Master', image: 'https://storage.classroomsarecool.mex.com/images/carparkingmaster.png' },
             { url: 'https://storage.classroomsarecool.mex.com/gunfest/index.html', title: 'Gun Fest', image: 'https://storage.classroomsarecool.mex.com/images/gunfest.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/spacewaves/index.html', title: 'Space Waves', image: 'https://storage.classroomsarecool.mex.com/images/spacewaves.png' },
             { url: 'https://storage.classroomsarecool.mex.com/stacksurfer/index.html', title: 'Stack Surfer', image: 'https://storage.classroomsarecool.mex.com/images/stacksurfer.png' },
             { url: 'https://storage.classroomsarecool.mex.com/realflightsimulator/index.html', title: 'Real Flight Simulator', image: 'https://storage.classroomsarecool.mex.com/images/realflightsimulator.png' },
             { url: 'https://storage.classroomsarecool.mex.com/bicycleridersimulator/index.html', title: 'Bicycle Riders Simulator', image: 'https://storage.classroomsarecool.mex.com/images/bicycleridersimulator.png' },
             { url: 'https://storage.classroomsarecool.mex.com/granny/index.html', title: 'Granny', image: 'https://storage.classroomsarecool.mex.com/images/granny.png' },
-            // NEW GAMES ADDED
-          
-            { url: 'https://script.google.com/macros/s/AKfycbyyxTq2w1p-VZwEpYO6g8wSrQwsbR7ev4PZSwK_kSdSM46mzcgGCdtlblpMcwFoCO3u/exec', title: 'Troll Tower', image: 'https://play-lh.googleusercontent.com/Zzf1iwPJI35qyd7qyPcJyeYirfEFWSf24m-PNzcbp-LTH0lurHt54LM0m7y44GnHHmBQ' },
-            { url: 'https://script.google.com/macros/s/AKfycbzFp_zUQorLRSTRZPQs40GmrHhlumFCf-NdpMRqfxHcR7_PMdh7g8UvS1NDX_Ik49iBgA/exec', title: 'Catch and Feed the Brainrot', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkfqB-4QtdWFLf5EunqYsoGXnbuQQfFBn2HrwKJhxPgQWnpbZLfFoI8x0osQSfzGZcgxCZwQ_maXQj-4Ih_WU5yqfvVwvg5Szj0NL0vykqU4Ww0Pp4u4Ho0LgkfFVPCc3LPdgjP71jROQolTnkhNmbQOkIDs86RVQeuvz0ymm9icS58pi4rmkTaxaiUOOgf6SbxTQTTNqcr0NOfwHW_Z_TL1dHW2wAtrdhdV02o=w1280' },
-            { url: 'https://lh3.googleusercontent.com/sitesv/AAzXCkfuFR1HNzgz5HJsUlienrujm8K7TbXgESNuOu9AKAzINEyS9yajyP_LvgquuacwVooY2x0FCc5AvTLpTlsGjaQS7UKAFmlheAxZMY09jKk17IfVqsftrNaxuR0gxITesAxqS4CDdbY7bJvrZ15r7xX6Nw2D_iyIfCH5r6ukT86OtFevt83UrX9g0B2DENULiQq0ogtYqbqZE-ptF2zExLkczPwMybZAf4fjW_I=w1280', title: 'Steal a Brainrot 2', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkf3XK589s5kl7A4om9EY52FeYoMN9wnexeQIqr7HND5JmFaWDkLgx1MC49gUVFo5QFM12Qn15spSL-jVXR_YqdPKg8z9GegEOz7d2u4TYaf8XONo7OZKxENvi29bsKA30lQVD4mpWJDWSQ6__cntTRjayjmcSmUVRuedRCbh8eHfpZJ0HYGUYvNyscrN7tmuo3cDKg3MB3jdUDc8NvucnkIVnfoQuUeYd5TN5w=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbwzSeRTcepa4gSddtkqyNQgNIxsXgbtpvOwBH_iHFqTPuI4LDTOREP_BcbCyO48fn6aew/exec', title: 'Create a Plane', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkfglHnodU7v2TbJLFLxeUpyS8lDARkeosIixXO04Z-X3t8YZ3K_7jLsaA6P-S49p458zqY6A9D7TmFkWSFpeLMtCLRpsvYI-yTLgl9Wk_j4Cufu7gPw94MKIJ1CTm4xo6YURlrE0MO4ML97gGcDJm-fl8IInML2-B8cOkYgYHYkk6WIGBit1j-wbtgo9cXTV9aE6VM7bPuEVtTBVDJ2HThQPeehMlCGkXNt=w1280https://lh3.googleusercontent.com/sitesv/AAzXCkef_--WmN8G3GRX3vwT6Q2HalxxmkVB2cV7oy2BX0tOXKcU5bNiQf9_XO5PmJ-U-ETOwejU_5epF1uj0wKKO6lUxLVGpGKf4AW9yzVI6vZG34ieJk9qKK3u1n0HeMMVMidAGZixaG-VF68bQROJXP0AkR8CLyoEuqPi9IIHFPERpxVUHhHy0gNI4f__jr7Ow6GNZMT4SSQJiITq7_tUvjFY0ePXuxd_c2hC=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbwK_YDMKEccZyVOz_fpe66G4Je4VyFPdT10OdaKpM699Utzbq41n2m6OXqAzpX0oqrLTA/exec', title: 'Grow a Garden', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkdWZZIj3Y8qNigo7JnJ03MYehMQuVneVfFi1DwObeMDqwU8UeGg6abH1Mn08-iMYGu3EIkCzYUKNB8osZY4TkM_xvo7iFWlqcl8hUWJL1rO8Mj6xyZnU-HeqojDu5F-zbq97gwYBecuRpPtfZKtu_OMyxG152Z6EZ3cSFCTDGVwhttps://lh3.googleusercontent.com/sitesv/AAzXCkcB-5SE8OaNQ7LoNGvjr6tGSuj33pON-fl8V3Kmfb0UptsgK1zrSEv1ytDmDODYTjEamwB4XSVUmHx-joVM2T3fD-_paYfniX9JFz3okBmfhAS4IHaOJ_pHzhL1b-5DttDSintH6OD8zM1Vzc4aif1A5yczMyGOOngPDvo8UFS7fHFTc84zEerXrJRhpKH83tEWe12-PGmlJ2spinsQcvTzifM5kq7QgBU6=w1280z4XRNrWnWbzcKj1ttlaMM-Hzrm6l5HlBr75PsCHcdmGFldrjhYau_nw_=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbydRKNRXuNyKIjoTMQ752kjgz5HGJpQ8j-cX-t2Ejum9YP_QVQ53Ar5YPywdob_XJk0/exec', title: 'Grow with Every Step', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkdNlNFFtFXa4RLc902JvunPhKo_SeAK1-ll8e599Cf9x0A2d5HAfVuoHDz1RrsfJROh5FqxsipJtf0MCt9l9P4ikFVh5cjNhPkION6b8dWiIJZW60bsiva_Cy1Oj5xEDwrN0BvU2m9nMImsG9UItAMMOGIM98MICmvHvG_rFSxrZ7k_ADxzhlYjL4-x__4z_PBUYGSE6IPyQYbSjgNrI4GTmw8VGUh9lo-C=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbwAoTmRTzE6ydvLBsbUcwDvlzS36xbr263_ttMmz8pBgmf0ih3RHJNeYFe3-evGMeMF/exec', title: 'Stickman Duel', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCker_0o8zGDCsXcyqAhvEHtRh4ipnNwstd7L3-74-ZBgm_WRWgTl-mIRo3A9rHpre_UWZHlHXaalwohovHhd7TSM6T2OoS1W3XimbBuVYohYo4SkIZ_X9bNTBpw8v2PEwt7BnTB73QUP67h5Jma78QpRDk8FiHbXFX5gBiShxs4hTfgLj3phVadXcLAeXnCdqsjFRn2UfQ8AsfgAFkRzPGJRKyQxnkm2Qh2s=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbytsGAlf3lPg4Po7HvAheHvyJKxYRA4ZYPUGjjjMpZafajZs3F5pu7E5BekDXlNhRHUFw/exec', title: 'Steal a Brainrot 2', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkfuFR1HNzgz5HJsUlienrujm8K7TbXgESNuOu9AKAzINEyS9yajyP_LvgquuacwVooY2x0FCc5AvTLpTlsGjaQS7UKAFmlheAxZMY09jKk17IfVqsftrNaxuR0gxITesAxqS4CDdbY7bJvrZ15r7xX6Nw2D_iyIfCH5r6ukT86OtFevt83UrX9g0B2DENULiQq0ogtYqbqZE-ptF2zExLkczPwMybZAf4fjW_I=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbxJalyip_ETy_kolDAlSVxdcnLtn16P6gIoJ5kDwt1abHFX32SUJEOLCWU31veTffv2/exec', title: 'Steal a Brainrot 1', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkfOsXAGuXks5KqRjXe0eEjca8KpyNfpv6h-uVc_0iVAlm8DBADbt1cH0ZRkeooZfGJi08PZONtpN5IPJh1Eb4P-nExJ4Mk0tky9hzTtvhJ3GMhhHgysoPgb0SF3lT82-ht-C-E4uHW6sC5Ud_ZLgT34m2FLvCs1wdj70ERq5K_jxecAqO3uHaUOFcWEtQoYs3cy5ZsJn9LLYC0CwEbMTZvqrbksEJVn7Ixx9ss=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbwL7Y7HV0JX-0VxjHehJQCxmNGQZdDAIdL2g5Za-kQlj4CA0ATlUsYe9ihkXcxgvzPx/exec', title: 'Backyard Baseball', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkf8nxViHq61wS8Irqm_CObaR3HAVfDuVf0MlbaVlm1FJY-AGdXsrZv0Yfu-i42NELojwyF84NdjgsgSQNEAy7D5AoB9vkhzZ43HkfvEaUU_phslgRVROVQXtBjMDRa9w9XYTbR2rVq0P9qHQmFFpT3DX380TqBH9dS93U8NwgsXzUIQP8qXqXWuLoQX2v19bdwBaYJki2TmWMRuBlxcq_SFp9K872wZ6knA=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbyzpgedybAIzwJdFDH_FASshSpC2OiY5OjyYHbpK979KQV2TbBnVh1wdYqjQVvF7SybqA/exec', title: 'Baseball Smash', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkePTop8P_cHb_NbbsZCIlSs1j5bX7HdnT8BqF7WWpw3Ka_Th1Sxh5IbHWvWW1rmNgOb2usl7miB2x5ukYQtech8YLRR7YncVRKvflNvIZV_bWPVsHLHf0xU1dRvqIDUui-MaN6Bf7qIvrHBrsO_sSgM-jaf_uilYa4B-zKfwouq-EG1MWeK7Xen8XKwVEf8c_145xJziK4bdPYzIyH2KFv5M_NkcfD9ew=w1280' },
-            { url: 'https://script.google.com/macros/s/AKfycbzH19beOtthmgHOAyQwTzkPrGUquWfIq91ElX_xLebPeMZTByPCWbHpMX2ANYTjcTjs/exec', title: 'Run 3', image: 'https://lh3.googleusercontent.com/sitesv/AAzXCkdB9j4gkib2YImhZxqVSBGPmKrl4MtX5UapIDebd6YqstiIwJVpCEr7lW4ycnUnA5VKdflj11G5HzCRfRzdYV2WWRIKVQbfB8Ju5Q4SuHpXfv7Yj4YkP-Y-nVPj7IJVO4r6CQASexiBSAsYrmt4KfcSrfU5_k4wVaDI3obYa4POjgtXodE0wSG-rLdBMu-vU626D5CBF7qN_EQrQcIEv3Nt2VrIlEId6ng3NGc=w1280' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/goingballs.html', title: 'Going Balls', image: 'https://mypps.classlink.courter.com/images/games/goingballs-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/dreadheadparkour.html', title: 'Dreadhead Parkour', image: 'https://mypps.classlink.courter.com/images/games/dreadhead-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/blumgipaintball.html', title: 'Blumbgi Paintball', image: 'https://mypps.classlink.courter.com/images/games/blumgipaintball-min.png' },
-            { url: 'https://mypps.classlink.courter.com/assets/mainstorage/asmallworldcup.html', title: 'A Small World Cup', image: 'https://mypps.classlink.courter.com/images/games/asmallworldcup-min.jpg' }
+            { url: 'https://storage.classroomsarecool.mex.com/gdunity/index.html', title: 'Geometry Dash', image: 'https://storage.classroomsarecool.mex.com/images/gdunity.png' },
+            { url: 'https://storage.classroomsarecool.mex.com/moneyrush/index.html', title: 'Money Rush', image: 'https://storage.classroomsarecool.mex.com/images/moneyrush.png' }
         ];
 
         // Games collection optimized (duplicates removed, variants consolidated)
 
         // Games collection optimized (duplicates removed, unwanted games filtered)
-
-        // NEW GAMES ADDED TO WAVEX
-        gamesData.push(
-           
-            { url: 'https://scratch.mit.edu/projects/1231016758/embed', title: 'Wheelie Life', image: 'https://i.ytimg.com/vi/2P1xYwxsYv4/hqdefault.jpg' },
-            { url: 'https://storage.classroomsarecool.mex.com/urban-sniper/index.html', title: 'Urban Sniper', image: 'https://storage.classroomsarecool.mex.com/images/urbansniper.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/UZG/index.html', title: 'UZG', image: 'https://storage.classroomsarecool.mex.com/images/UZG.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/heistio/index.html', title: 'Heist IO', image: 'https://storage.classroomsarecool.mex.com/images/heistio.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/maskedforces/index.html', title: 'Masked Forces', image: 'https://storage.classroomsarecool.mex.com/images/maskedforces.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/hackertyper/index.html', title: 'Hacker Typer', image: 'https://storage.classroomsarecool.mex.com/images/hackertyper.png' },
-            { url: 'https://storage.classroomsarecool.mex.com/doodle-jump/index.html', title: 'Doodle Jump', image: 'https://storage.classroomsarecool.mex.com/images/doodlejump.png' }
-        );
 
         let currentGamesData = [...gamesData];
 
@@ -2933,12 +3162,6 @@
             const closeBtn = document.getElementById('gameCloseBtn');
             const fullscreenBtn = document.getElementById('gameFullscreenBtn');
             const resetBtn = document.getElementById('gameResetBtn');
-            const tipsBar = document.getElementById('tipsBar');
-
-            // Hide tips bar when game is open
-            if (tipsBar) {
-                tipsBar.style.display = 'none';
-            }
 
             // Set the title and iframe source
             titleElement.textContent = title;
@@ -2952,31 +3175,18 @@
 
             // Set up event listeners
             closeBtn.onclick = () => {
-                closeGameIframe();
-            };
-
-            function closeGameIframe() {
                 overlay.classList.remove('show');
                 iframe.src = '';
-                // Show tips bar when game is closed
-                if (tipsBar) {
-                    tipsBar.style.display = 'flex';
-                }
-            }
-
-            fullscreenBtn.onclick = () => {
-                toggleGameFullscreen();
             };
 
-            function toggleGameFullscreen() {
-                // Only toggle the game container, not the entire document
+            fullscreenBtn.onclick = () => {
                 container.classList.toggle('fullscreen');
                 if (container.classList.contains('fullscreen')) {
                     fullscreenBtn.textContent = 'EXIT FULLSCREEN';
                 } else {
                     fullscreenBtn.textContent = 'FULLSCREEN';
                 }
-            }
+            };
 
             resetBtn.onclick = () => {
                 const currentSrc = iframe.src;
@@ -2990,7 +3200,8 @@
             // Close on overlay click (but not on container click)
             overlay.onclick = (e) => {
                 if (e.target === overlay) {
-                    closeGameIframe();
+                    overlay.classList.remove('show');
+                    iframe.src = '';
                 }
             };
 
@@ -2999,7 +3210,10 @@
 
             function handleEscKey(e) {
                 if (e.key === 'Escape') {
-                    closeGameIframe();
+                    overlay.classList.remove('show');
+                    iframe.src = '';
+                    container.classList.remove('fullscreen');
+                    fullscreenBtn.textContent = 'FULLSCREEN';
                     document.removeEventListener('keydown', handleEscKey);
                 }
             }
@@ -3169,60 +3383,174 @@
             });
         }
 
-        // Proxy Page Functionality (Manual Typing Effect with Background Overlay)
+        // Proxy URLs - stored in memory, not displayed to user
+        let currentProxyUrlIndex = 0;
+        const proxyUrls = [
+            'https://myapps.classlink.meatbytes.com',
+            'https://myapps.classlink.bookinturkey.net',
+            'https://myapps.classlink.explosionlearning.org'
+        ];
+
+        // Proxy Page Functionality (WAVE-X Proxy Loading Animation)
         function initializeProxyPage() {
             const launchBtn = document.getElementById('launchProxyBtn');
-            const proxyOverlayText = document.getElementById('proxyOverlayText');
+            const proxyLoadingOverlay = document.createElement('div');
+            proxyLoadingOverlay.id = 'proxyLoadingOverlay';
+            proxyLoadingOverlay.className = 'proxy-loading-overlay';
+            document.body.appendChild(proxyLoadingOverlay);
+
+            // Initialize URL selection - default to first server
+            updateProxyButtonIndicators(0);
 
             launchBtn.addEventListener('click', async () => {
                 // Disable button during execution
                 launchBtn.style.opacity = '0.6';
                 launchBtn.disabled = true;
 
-                // Show the overlay text element
-                proxyOverlayText.style.display = 'flex';
-                proxyOverlayText.textContent = '';
+                // Show the WAVE-X proxy loading overlay
+                showProxyLoadingAnimation();
 
-                // Simulate manual typing of the command
-                const command = 'launching wave-x proxy...';
-                let index = 0;
+                // Start the proxy launch sequence
+                setTimeout(() => {
+                    const selectedUrl = proxyUrls[currentProxyUrlIndex];
+                    // Hide loading animation and show proxy iframe
+                    hideProxyLoadingAnimation();
+                    showGameIframe(selectedUrl, 'Wave-X Proxy Access');
 
-                const typeCommand = () => {
-                    if (index < command.length) {
-                        proxyOverlayText.textContent += command[index];
-                        index++;
-                        setTimeout(typeCommand, 50 + (Math.random() * 50)); // Faster random delay for realistic typing
-                    } else {
-                        // Command finished, show Health:ok after a pause
-                        setTimeout(() => {
-                            proxyOverlayText.textContent = ''; // Start fresh for health check
-                            typeHealthCheck();
-                        }, 200);
-                    }
-                };
-
-                const typeHealthCheck = () => {
-                    const healthCommand = 'Health:ok';
-                    let healthIndex = 0;
-
-                    const typeHealth = () => {
-                        if (healthIndex < healthCommand.length) {
-                            proxyOverlayText.textContent += healthCommand[healthIndex];
-                            healthIndex++;
-                            setTimeout(typeHealth, 100 + (Math.random() * 50));
-                        } else {
-                            // Health check complete - open proxy site like a game
-                            setTimeout(() => {
-                                showGameIframe('https://myapps.classlink.midschoolmath.fri67.com/', 'Wave-X Proxy Access');
-                            }, 1000);
-                        }
-                    };
-
-                    typeHealth();
-                };
-
-                typeCommand();
+                    // Re-enable button after launch
+                    launchBtn.style.opacity = '1';
+                    launchBtn.disabled = false;
+                }, 3500); // Total animation time
             });
+        }
+
+        function showProxyLoadingAnimation() {
+            const overlay = document.getElementById('proxyLoadingOverlay');
+            overlay.innerHTML = `
+                <div class="proxy-loading-animation">
+                    <div class="proxy-loading-title">WAVE-X PROXY LOADING...</div>
+                    <div class="proxy-loading-status">
+                        <div id="proxy-loading-text">Initializing proxy protocols...</div>
+                    </div>
+                    <div class="proxy-loading-progress">
+                        <div class="proxy-loading-fill"></div>
+                    </div>
+                    <div class="proxy-loading-matrix" id="proxyLoadingMatrix"></div>
+                    <div class="proxy-loading-terminal">
+                        <div class="proxy-terminal-lines">
+                            <div class="proxy-terminal-line">
+                                <span class="proxy-terminal-prompt">wave-x@terminal:~$</span>
+                                <span class="proxy-terminal-output" id="terminalLine1">sudo proxy --launch --server=${currentProxyUrlIndex + 1}</span>
+                            </div>
+                            <div class="proxy-terminal-line">
+                                <span class="proxy-terminal-prompt">wave-x@terminal:~$</span>
+                                <span class="proxy-terminal-output" id="terminalLine2">Establishing secure tunnel...</span>
+                            </div>
+                            <div class="proxy-terminal-line">
+                                <span class="proxy-terminal-prompt">wave-x@terminal:~$</span>
+                                <span class="proxy-terminal-output" id="terminalLine3">Proxy ready in 3... 2... 1...</span>
+                            </div>
+                            <div class="proxy-terminal-line">
+                                <span class="proxy-terminal-prompt">wave-x@terminal:~$</span>
+                                <span class="proxy-terminal-cursor">_</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            overlay.classList.add('show');
+
+            // Animate the loading text phases
+            const loadingTexts = [
+                'Initializing proxy protocols...',
+                'Scanning network endpoints...',
+                'Establishing secure connection...',
+                'Verifying access credentials...',
+                'Loading proxy environment...'
+            ];
+
+            let textIndex = 0;
+            const textCycle = setInterval(() => {
+                textIndex = (textIndex + 1) % loadingTexts.length;
+                document.getElementById('proxy-loading-text').textContent = loadingTexts[textIndex];
+            }, 600);
+
+            // Create matrix rain effect within the overlay
+            createProxyMatrixRain();
+
+            // Stop animation after timeout
+            setTimeout(() => {
+                clearInterval(textCycle);
+            }, 3500);
+        }
+
+        function hideProxyLoadingAnimation() {
+            const overlay = document.getElementById('proxyLoadingOverlay');
+            overlay.classList.remove('show');
+            setTimeout(() => {
+                overlay.innerHTML = '';
+            }, 300);
+        }
+
+        function createProxyMatrixRain() {
+            const matrixContainer = document.getElementById('proxyLoadingMatrix');
+            if (!matrixContainer) return;
+
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numStreams = 15;
+
+            for (let i = 0; i < numStreams; i++) {
+                const stream = document.createElement('div');
+                stream.className = 'proxy-matrix-stream';
+                stream.textContent = Array.from({length: 20}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+                stream.style.left = Math.random() * 100 + '%';
+                stream.style.animationDelay = Math.random() * 3 + 's';
+                matrixContainer.appendChild(stream);
+            }
+        }
+
+        // Function to switch between proxy servers
+        function setProxyUrl(urlIndex) {
+            currentProxyUrlIndex = urlIndex;
+            updateProxyButtonIndicators(urlIndex);
+            showNotification('PROXY SERVER SELECTED', `Server ${urlIndex + 1} set as active`, 'info');
+        }
+
+        // Update visual indicators for selected server
+        function updateProxyButtonIndicators(activeIndex) {
+            for (let i = 0; i < 3; i++) {
+                const indicator = document.getElementById(`btnIndicator${i}`);
+                if (indicator) {
+                    if (i === activeIndex) {
+                        indicator.textContent = '●';
+                        indicator.style.color = 'var(--hacker-green)';
+                        indicator.style.textShadow = '0 0 10px var(--hacker-green)';
+                    } else {
+                        indicator.textContent = '○';
+                        indicator.style.color = 'var(--hacker-cyan)';
+                        indicator.style.textShadow = '0 0 5px var(--hacker-cyan)';
+                    }
+                }
+            }
+        }
+
+        // Custom proxy URL launcher
+        function launchCustomProxy() {
+            const customUrl = document.getElementById('proxyCustomUrl').value.trim();
+            if (!customUrl) {
+                showNotification('ERROR', 'Please enter a URL to proxy', 'error');
+                return;
+            }
+
+            // Basic URL validation
+            try {
+                new URL(customUrl);
+                showGameIframe(customUrl, 'Custom Proxy Access');
+                showNotification('CUSTOM PROXY LAUNCHED', 'Opening custom URL...', 'success');
+            } catch (e) {
+                showNotification('INVALID URL', 'Please enter a valid URL', 'error');
+            }
         }
 
         // Dev Mode Functionality
@@ -4111,27 +4439,25 @@ function chromebookCrasher() {
         class TipsCycler {
             constructor() {
                 this.tips = [
-                    "Wanna be director?",
                     "Sam M is the best sam",
-                    "Wanna be director?",
                     "the c diddy meme is not massive",
                     "low taper fade is NOT massive",
                     "dj khaled is banned from this site",
                     "parking lot",
-                    "Wanna be director?",
                     "lock in...",
-                    "Wanna be director?",
                     "tribute to tuff games...",
                     "parbon is hello",
-                    "Wanna be director?",
                     "taco bell",
                     "dj khaled is sooooooooooooooooooooooooo annoying",
                     "parker is a parking lot",
-                    "Wanna be director?",
-                    "Wanna be director?",
-                    "Wanna be director?",
-                    "Wanna be director?",
-                    "D+E",
+                    "maddy is a 6'7 leprechaun",
+                    "evie and liesl are boyfriends",
+                    "dezzie is twin",
+                    "bumming is a lifestyle",
+                    "maddie is 67",
+                    "harper and scarlet are married",
+                    "let santi cook",
+                    "D+S",
                 ];
                 this.currentIndex = 0;
                 this.tipsElement = document.getElementById('tipsText');
@@ -4577,16 +4903,16 @@ function startMethod2Crasher() {
             animation: mover 4s alternate infinite both;
             animation-delay: calc(var(--d) * -0.04s);
 
-            &:nth-child(n + 1):nth-child(-n + 5) { color: #ff5733; }
-            &:nth-child(n + 6):nth-child(-n + 10) { color: #33ff57; }
-            &:nth-child(n + 11):nth-child(-n + 15) { color: #3357ff; }
-            &:nth-child(n + 16):nth-child(-n + 20) { color: #9d80cb; }
-            &:nth-child(n + 21):nth-child(-n + 25) { color: #33fff5; }
-            &:nth-child(n + 26):nth-child(-n + 30) { color: #f5ff33; }
-            &:nth-child(n + 31):nth-child(-n + 35) { color: #ff8c33; }
-            &:nth-child(n + 36):nth-child(-n + 40) { color: #8c33ff; }
-            &:nth-child(n + 41):nth-child(-n + 45) { color: #33ff8c; }
-            &:nth-child(n + 46):nth-child(-n + 50) { color: #ff3380; }
+            &:nth-child(n &#43; 1):nth-child(-n &#43; 5) { color: #ff5733; }
+            &:nth-child(n &#43; 6):nth-child(-n &#43; 10) { color: #33ff57; }
+            &:nth-child(n &#43; 11):nth-child(-n &#43; 15) { color: #3357ff; }
+            &:nth-child(n &#43; 16):nth-child(-n &#43; 20) { color: #9d80cb; }
+            &:nth-child(n &#43; 21):nth-child(-n &#43; 25) { color: #33fff5; }
+            &:nth-child(n &#43; 26):nth-child(-n &#43; 30) { color: #f5ff33; }
+            &:nth-child(n &#43; 31):nth-child(-n &#43; 35) { color: #ff8c33; }
+            &:nth-child(n &#43; 36):nth-child(-n &#43; 40) { color: #8c33ff; }
+            &:nth-child(n &#43; 41):nth-child(-n &#43; 45) { color: #33ff8c; }
+            &:nth-child(n &#43; 46):nth-child(-n &#43; 50) { color: #ff3380; }
         }
 
         .container-loader:hover .aro {
