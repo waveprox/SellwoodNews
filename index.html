@@ -2112,23 +2112,35 @@
                     <h2 style="color: var(--hacker-cyan); font-size: 1.2rem; margin-bottom: 15px;">Select Proxy Server:</h2>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                         <button class="games-btn" onclick="setProxyUrl(0)">
-                            <div class="btn-indicator" id="btnIndicator0">●</div>
+                            <div class="btn-indicator" id="btnIndicator0">○</div>
                             <span>Server A</span>
                         </button>
                         <button class="games-btn" onclick="setProxyUrl(1)">
-                            <div class="btn-indicator" id="btnIndicator1">●</div>
+                            <div class="btn-indicator" id="btnIndicator1">○</div>
                             <span>Server B</span>
                         </button>
                         <button class="games-btn" onclick="setProxyUrl(2)">
-                            <div class="btn-indicator" id="btnIndicator2">●</div>
+                            <div class="btn-indicator" id="btnIndicator2">○</div>
                             <span>Server C</span>
+                        </button>
+                        <button class="games-btn" onclick="setProxyUrl(3)">
+                            <div class="btn-indicator" id="btnIndicator3">○</div>
+                            <span>Server D</span>
+                        </button>
+                        <button class="games-btn" onclick="setProxyUrl(4)">
+                            <div class="btn-indicator" id="btnIndicator4">○</div>
+                            <span>Server E</span>
+                        </button>
+                        <button class="games-btn" onclick="setProxyUrl(5)">
+                            <div class="btn-indicator" id="btnIndicator5">○</div>
+                            <span>Server F</span>
                         </button>
                     </div>
                 </div>
 
                     <div class="proxy-launch-section">
                         <button class="launch-proxy-btn" id="launchProxyBtn">🚀 LAUNCH PROXY</button>
-                        <div class="proxy-overlay-text" id="proxyOverlayText"></div>
+                       
                     </div>
             </div>
         </div>
@@ -2383,12 +2395,32 @@
         // Global Matrix Rain Background System
         class MatrixBackground {
             constructor() {
-                this.matrixRain = document.getElementById('matrixRain');
+                this.container = this.createContainer();
                 this.isActive = false;
                 this.matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*!(){}[]|\\:;"\'<>,.?/~`';
                 this.streams = [];
-                this.maxStreams = 25; // Increased for better coverage
+                this.maxStreams = 15; // More streams for better coverage
                 this.init();
+            }
+
+            createContainer() {
+                // Create matrix rain container
+                const container = document.createElement('div');
+                container.id = 'matrixRain';
+                container.className = 'matrix-rain';
+                container.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100vh;
+                    pointer-events: none;
+                    z-index: 4;
+                    overflow: hidden;
+                    opacity: 0.6;
+                `;
+                document.body.appendChild(container);
+                return container;
             }
 
             init() {
@@ -2398,45 +2430,46 @@
 
             createFullMatrixRain() {
                 // Clear any existing streams
-                this.matrixRain.innerHTML = '';
+                this.container.innerHTML = '';
 
-                // Create continuous columns of falling characters
-                for (let col = 0; col < this.maxStreams; col++) {
-                    this.createMatrixStream(col);
+                // Create continuous streams of falling characters
+                for (let i = 0; i < this.maxStreams; i++) {
+                    this.createMatrixStream(i);
                 }
             }
 
-            createMatrixStream(columnIndex) {
+            createMatrixStream(index) {
                 const stream = document.createElement('div');
-                const xPos = (columnIndex / this.maxStreams) * 100; // Even distribution across width
+                const xPos = (index / this.maxStreams) * 100;
 
-                stream.className = `matrix-char matrix-char-custom ${this.getRandomColorClass()}`;
+                stream.className = `matrix-char ${this.getRandomColorClass()}`;
                 stream.style.left = xPos + '%';
                 stream.style.fontSize = '14px';
                 stream.style.opacity = '0.8';
                 stream.style.userSelect = 'none';
+                stream.style.whiteSpace = 'nowrap'; // Prevent line wrapping
 
-                const charLength = Math.floor(Math.random() * 20) + 10; // Random length per stream
+                const charLength = Math.floor(Math.random() * 30) + 20; // Longer streams
                 let chars = '';
                 for (let i = 0; i < charLength; i++) {
                     chars += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
                 }
                 stream.textContent = chars;
 
-                this.matrixRain.appendChild(stream);
+                this.container.appendChild(stream);
                 this.streams.push(stream);
 
-                // Animate the stream
+                // Start animation
                 this.animateMatrixStream(stream);
             }
 
             getRandomColorClass() {
                 const colors = ['green', 'cyan', 'red', 'yellow', 'purple'];
-                return colors[Math.floor(Math.random() * colors.length)];
+                return 'matrix-char-' + colors[Math.floor(Math.random() * colors.length)];
             }
 
             animateMatrixStream(stream) {
-                const fallSpeed = Math.random() * 2 + 1.5; // Slight speed variation
+                const fallSpeed = Math.random() * 1.5 + 1; // Variable speed
                 let y = -stream.offsetHeight;
 
                 const animate = () => {
@@ -2444,12 +2477,13 @@
                     stream.style.top = y + 'px';
 
                     if (y > window.innerHeight) {
-                        // Reset to top with slight delay
+                        // Reset to top
                         y = -stream.offsetHeight;
-                        // Occasionally change characters
-                        if (Math.random() < 0.1) {
+
+                        // Change characters occasionally
+                        if (Math.random() < 0.2) {
                             let chars = '';
-                            const charLength = Math.floor(Math.random() * 20) + 10;
+                            const charLength = Math.floor(Math.random() * 30) + 20;
                             for (let i = 0; i < charLength; i++) {
                                 chars += this.matrixChars[Math.floor(Math.random() * this.matrixChars.length)];
                             }
@@ -2463,20 +2497,13 @@
                 };
 
                 animate();
-
-                // Respawn stream occasionally
-                setTimeout(() => {
-                    if (this.isActive) {
-                        stream.remove();
-                        const newStream = this.streams.splice(this.streams.indexOf(stream), 1);
-                        setTimeout(() => this.createMatrixStream(Math.floor(Math.random() * this.maxStreams)), Math.random() * 5000);
-                    }
-                }, Math.random() * 10000 + 5000); // 5-15 second respawn
             }
 
             stop() {
                 this.isActive = false;
-                this.matrixRain.innerHTML = '';
+                if (this.container) {
+                    this.container.innerHTML = '';
+                }
             }
 
             restart() {
@@ -2803,11 +2830,26 @@
             initializeGamesPage();
             initializeTabs();
 
-            // Start matrix rain background immediately
-            const matrixBackground = new MatrixBackground();
+                // Start matrix rain background immediately
+                try {
+                    console.log('🌧️ Initializing Matrix Rain Background...');
+                    const matrixBackground = new MatrixBackground();
+                    console.log('✅ Matrix Rain Background initialized successfully');
+                } catch (error) {
+                    console.error('❌ Matrix Rain Background failed to initialize:', error);
+                }
 
             // Start tips cycler
             new TipsCycler();
+
+            // Ensure matrix rain persists on games page
+            setTimeout(() => {
+                const matrixRain = document.getElementById('matrixRain');
+                if (!matrixRain) {
+                    console.log('🔄 Creating persistent matrix rain...');
+                    const matrixBackground = new MatrixBackground();
+                }
+            }, 1000);
 
             // Start threat injector after short delay
             setTimeout(() => {
@@ -3388,7 +3430,10 @@
         const proxyUrls = [
             'https://myapps.classlink.meatbytes.com',
             'https://myapps.classlink.bookinturkey.net',
-            'https://myapps.classlink.explosionlearning.org'
+            'https://myapps.classlink.explosionlearning.org',
+            'https://itrsa.banquick.com/',
+            'https://securly.com.pbdjarum.info/',
+            'https://wifi.reconectar.cl/'
         ];
 
         // Proxy Page Functionality (WAVE-X Proxy Loading Animation)
@@ -3519,7 +3564,7 @@
 
         // Update visual indicators for selected server
         function updateProxyButtonIndicators(activeIndex) {
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 6; i++) {  // Changed from 3 to 6 to include all buttons
                 const indicator = document.getElementById(`btnIndicator${i}`);
                 if (indicator) {
                     if (i === activeIndex) {
